@@ -1,3 +1,5 @@
+#ifndef Arduino_h
+#define Arduino_h
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
@@ -16,3 +18,4 @@
 
 void pinMode(uint8_t pin, uint8_t mode);
 void digitalWrite(uint8_t pin, uint8_t val);
+#endif
