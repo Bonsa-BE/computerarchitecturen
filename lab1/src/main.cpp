@@ -3,7 +3,7 @@
 
 int main(void)
 {
-  DDRB = (1 >> DDB5) | DDRB;
+  DDRB = (1 << DDB5) | DDRB;
   while (1)
   {
     /*toggle led on*/
