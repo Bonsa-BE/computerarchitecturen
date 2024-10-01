@@ -21,18 +21,13 @@ void pinMode(volatile uint8_t *pin, uint8_t mode)
 {
     if (mode == OUTPUT)
     {
-        *pin = *pin | (1 << 5); /*hardcoded for internal led*/
+        *pin = *pin | (1 << 5);
     }
 
     else if (mode == INPUT)
     {
-        *pin = *pin & ~(1 << 5); /*hardcoded for internal led*/
+        *pin = *pin & ~(1 << 5);
     }
-     else if (mode == INPUT_PULLUP) /*hardcoded for button on PB4*/
-    {
-        *pin = *pin & ~(1 << 4);
-    }
-
 }
 
 void digitalWrite(volatile uint8_t *pin, uint8_t val)
@@ -46,9 +41,5 @@ void digitalWrite(volatile uint8_t *pin, uint8_t val)
     {
         *pin = *pin & ~(1 << 5);
     }
-}
-void digitalRead(volatile uint8_t *pin);
-{
-    bool waarde =  *pin && (of |, ik weet ff nie);
 }
 #endif

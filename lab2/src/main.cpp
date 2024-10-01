@@ -8,18 +8,20 @@ portB input register : 0x23 (uitlezen waarde)
 */
 int main(void)
 {
-  volatile uint8_t *ptr = (volatile uint8_t *)0x24;
-  volatile uint8_t *ptr1 = (volatile uint8_t *)0x25;
-  pinMode(ptr, OUTPUT);
+  volatile uint8_t *ddr = (volatile uint8_t *)0x24;
+  volatile uint8_t *ior = (volatile uint8_t *)0x25;
+  volatile uint8_t *ir = (volatile uint8_t *)0x23;
+  pinMode(ddr, OUTPUT);
+
   while (1)
   {
     /*toggle led on*/
     /* PORTB = (1 << PB5) | PORTB;*/
-    digitalWrite(ptr1, HIGH);
+    digitalWrite(ior, HIGH);
     /*sleep*/
     _delay_ms(1000);
     /*toggle led off*/
-    digitalWrite(ptr1, LOW);
+    digitalWrite(ior, LOW);
     /*PORTB = PORTB & ~(1 << PB5);*/
     /*foute lijn, verandert waarden aan register: PORTB = (0 << PB5) | PORTB;*/
     /*sleep*/
