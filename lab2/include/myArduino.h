@@ -28,9 +28,12 @@ void pinMode(volatile uint8_t *pin, uint8_t mode)
     {
         *pin = *pin & ~(1 << 5); /*hardcoded for internal led*/
     }
-     else if (mode == INPUT_PULLUP) /*hardcoded for button on PB4*/
+    else if (mode == INPUT_PULLUP) /*hardcoded for button on PB4*/
     {
         *pin = *pin & ~(1 << 4);
+        
+        //*pin |= (1 << 4); // Optional: Enable internal pull-up resistor on PB4
+        
     }
 
 }
@@ -47,8 +50,8 @@ void digitalWrite(volatile uint8_t *pin, uint8_t val)
         *pin = *pin & ~(1 << 5);
     }
 }
-void digitalRead(volatile uint8_t *pin);
+int digitalRead(volatile uint8_t *reg, volatile uint8_t *port, int pin)
 {
-    bool waarde =  *pin && (of |, ik weet ff nie);
+    return (*reg & (1 << pin)) ? HIGH : LOW;
 }
 #endif
