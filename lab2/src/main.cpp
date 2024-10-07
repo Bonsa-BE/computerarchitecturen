@@ -10,7 +10,6 @@ int main(void)
 {
   volatile uint8_t *ddr = (volatile uint8_t *)0x24;
   volatile uint8_t *ior = (volatile uint8_t *)0x25;
-  volatile uint8_t *ir = (volatile uint8_t *)0x23;
   pinMode(ddr, OUTPUT);
 
   while (1)
