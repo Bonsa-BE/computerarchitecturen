@@ -9,11 +9,11 @@ int main() {
       _delay_ms(500);
       ownDigitalWrite(5, 0);
       _delay_ms(500);*/
-    if (ownDigitalRead(1)==1)
+    if (ownDigitalRead(1)) //check of pin hoog staat
     {
-      ownDigitalWrite(5,1);
+      ownDigitalWrite(5,1); //schrijf ledpin hoog
     } else{
-      ownDigitalWrite(5,0);
+      ownDigitalWrite(5,0); //schrijf ledpin laag
     }
     
   }
