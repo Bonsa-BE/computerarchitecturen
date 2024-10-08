@@ -1,18 +1,35 @@
-#include <Arduino.h>
+#include <arduino.h>
+#include <avr/io.h>
+#include <avr/interrupt.h>
 
-// put function declarations here:
-int myFunction(int, int);
+bool ledstate;
 
-void setup() {
-  // put your setup code here, to run once:
-  int result = myFunction(2, 3);
+ISR(INT1_vect) //create ISR for INT1 (pin 3)
+{
+  ledstate = HIGH;
+  digitalWrite(LED_BUILTIN, ledstate);
+}
+ISR(INT0_vect){ //creaet ISR for PCINT0 (pin 2)
+  ledstate = LOW;
+  digitalWrite(LED_BUILTIN, ledstate);
 }
 
-void loop() {
-  // put your main code here, to run repeatedly:
-}
+int main(void)
+{
+pinMode(LED_BUILTIN, OUTPUT);
+pinMode(2, INPUT_PULLUP);
+pinMode(3, INPUT_PULLUP);
 
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
+  // Enable Pin Change Mask for arduino pin 2 and 3
+  EICRA |= (1 << ISC11);
+  EIMSK |= (1<< INT0);
+
+  EICRA |= (1<< ISC01);
+  EIMSK |= (1<< INT1);
+  sei();
+  while (1)
+  {
+    // do nothing
+  }
+  return 0;
 }
