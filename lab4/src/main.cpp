@@ -22,8 +22,8 @@ int main()
 
   digitalWrite(LED_BUILTIN, HIGH);
 
-  PCICR |= (1 << PCIE2);    // enable logic change detection for INT2 vector
-  PCMSK2 |= (1 << PCINT21) | (1 << PCINT23); // enable interrupt on pcint21 (pin 5) and pcint23 (pin 7)
+  PCICR |= (1 << PCIE2);  // enable logic change detection for INT2 vector
+  PCMSK2 |= (1 << PCINT21) | (1 << PCINT23);  // enable interrupt on pcint21 (pin 5) and pcint23 (pin 7)
 
   sei(); // enable global interrupts
 
