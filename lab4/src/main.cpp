@@ -6,17 +6,17 @@ ISR(PCINT2_vect) // create ISR for PCINT1 (PCINT8-PCINT14)
 {
   if (digitalRead(PD5) == LOW)
   {
-    digitalWrite(PB2, HIGH);
+    digitalWrite(LED_BUILTIN, HIGH);
   }
   else if (digitalRead(PD7) == LOW)
   {
-    digitalWrite(PB2, LOW);
+    digitalWrite(LED_BUILTIN, LOW);
   }
 }
 
 int main()
 {
-  pinMode(PB2, OUTPUT); // pin gpio10
+  pinMode(LED_BUILTIN, OUTPUT); // pin gpio10 for dramco
   pinMode(PD7, INPUT_PULLUP);   // pin gpio7
   pinMode(PD5, INPUT_PULLUP);   // pin gpio5
 
