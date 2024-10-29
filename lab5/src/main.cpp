@@ -1,38 +1,62 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
-// Interrupt Service Routine (ISR) voor Timer1 Compare Match A
-ISR(TIMER1_COMPA_vect)
+// 8-bit timer
+volatile uint16_t counter = 0; // counter for overflows
+ISR(TIMER0_OVF_vect)
 {
-  PORTB ^= (1 << PB2); //toggle LED
+  counter++;
+  if (counter >= 976)
+  {                      // every 976 overflows, toggle LED
+    PORTB ^= (1 << PB2); // LED toggle
+    counter = 0;         // Reset counter
+  }
 }
 
-int main()
+int main(void)
 {
-  cli();
-  DDRB |= (1 << PB2);//internal led Dramco UNO (D10) as OUTPUT
-  // 1. Stel Timer1 in op CTC-modus (Clear Timer on Compare Match)
-  // Schrijf '0100' in WGM12 (CTC-mode) door WGM12-bit te zetten in TCCR1B-register.
-  TCCR1B |= (1 << WGM12);
+  cli();                               // disable global interrupts
+  DDRB |= (1 << PB2);                  // dramco uno builtin led as output
+  TCCR0A = 0;                          // set WGM01 and WGM00 as 0 for normal mode
+  TCCR0B |= (1 << WGM02);              // set WGM02 as 0 for normal mode
+  TCCR0B |= (1 << CS01) | (1 << CS00); // Set prescaler 64
+  TIMSK0 |= (1 << TOIE0);              // Set Timer0 overflow interrrupt
+  sei();                               // Schakel globale interrupts in
+  
+  // formule: #klokken per overflow = (max_timer − TCNT0) * prescaler / f_cpu
+  // ingevuld: 1 = (256 - TCNT0) * 64 / 16000000
+  // TCNT0 = 249744 => 976 * 256 -> let overflow 976 times before taking action
+  TCNT0 = 0;
 
-  // 2. Stel de klokprescaler in op 1024
-  // Schrijf '101' in de bits CS12, CS11, CS10 in het TCCR1B-register.
-  TCCR1B |= (1 << CS12) | (1 << CS10); // CS12 en CS10 zetten
-
-  // 3. Bereken de waarde voor de output compare (OCR1A) register
-  // oorspronkelijke formule: F_out = F_CPU / (prescaler * (1 + OCR1A))
-  // omgevormde formule: OCR1A = (F_CPU / (prescaler * gewenste_frequentie)) - 1
-  // Voor een 1 seconde timer (frequentie = 1 Hz) en F_CPU = 16MHz:
-  // OCR1A = (16000000 / (1024 * 1)) - 1 = 15624
-  OCR1A = 15624; // Output compare waarde voor 1Hz (1 seconde)
-
-  // 4. Sta de interrupt toe bij een output compare match (OCIE1A)
-  // Activeer de output compare interrupt door OCIE1A te zetten in het TIMSK1-register.
-  TIMSK1 |= (1 << OCIE1A);
-  sei(); // enable global interrupts
   while (1)
   {
     // do nothing
   }
-  return 0;
 }
+
+/* 10bit timer
+// Interrupt Service Routine (ISR) voor Timer1 overflow
+ISR(TIMER1_OVF_vect)
+{
+  PORTB ^= (1 << PB2); // toggle LED
+  TCNT1 = 49910; //reset TCNT1
+}
+int main(void) {
+//1. timer in normal mode -> WGM10, WGM11, WGM12 en WGM13 op 0 (2 verschillende registers!)
+ TCCR1A &= ~(1<< WGM10);
+ TCCR1A &= ~(1<< WGM11);
+ TCCR1B &= ~(1<< WGM13);
+ TCCR1B &= ~(1<< WGM12);
+ //2. Stel prescaler op 1024: -> '101' voor prescaler in TCCR1B
+ TCCR1B |= (1 << CS12) | (1 << CS10);
+ //3. enable interrupt op overflow:
+ TIMSK1 |= (1 << TOIE1);
+ //4. voorzie TCNT0 zodat elke seconde de led getoggled wordt
+ //formule: #klokken per overflow = (max_timer − TCNT1) * prescaler / f_cpu
+ //ingevuld: 1 = (65535 - TCNT1) * 1024 / 16000000
+ //TCNT1 = 49910
+ TCNT1 = 49910;
+ while(1){
+ //do nothing
+  }
+ }*/
